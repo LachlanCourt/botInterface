@@ -4,6 +4,7 @@ import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import logo from "public/logo.png"
+import { Button } from "DesignSystem/components/Button"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -45,6 +46,7 @@ const UserInfo = () => {
             <strong>Login</strong>
           </a>
         </Link>
+        <Button>Hello there</Button>
       </>
     )
   }
