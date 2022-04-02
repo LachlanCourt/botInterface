@@ -9,16 +9,24 @@ import {
 } from "blitz"
 import LoginForm from "app/auth/components/LoginForm"
 
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import customTheme from "DesignSystem/theme"
+
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
+  const theme = extendTheme(customTheme)
+  console.log(theme)
+
   return (
-    <ErrorBoundary
-      FallbackComponent={RootErrorFallback}
-      onReset={useQueryErrorResetBoundary().reset}
-    >
-      {getLayout(<Component {...pageProps} />)}
-    </ErrorBoundary>
+    <ChakraProvider theme={theme}>
+      <ErrorBoundary
+        FallbackComponent={RootErrorFallback}
+        onReset={useQueryErrorResetBoundary().reset}
+      >
+        {getLayout(<Component {...pageProps} />)}
+      </ErrorBoundary>
+    </ChakraProvider>
   )
 }
 
