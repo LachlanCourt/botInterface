@@ -14,21 +14,25 @@ const seed = async () => {
   //   await db.project.create({ data: { name: "Project " + i } })
   // }
   if (process.env.NODE_ENV === "production") {
-    if (
-      process.env.SITE_ADMIN_USERNAME &&
-      process.env.SITE_ADMIN_EMAIL &&
-      process.env.SITE_ADMIN_PASSWORD
-    ) {
-      const hashedPassword = await SecurePassword.hash(process.env.SITE_ADMIN_PASSWORD.trim())
-      await db.user.create({
-        data: {
-          name: process.env.SITE_ADMIN_USERNAME,
-          email: process.env.SITE_ADMIN_EMAIL,
-          hashedPassword: hashedPassword,
-        },
-      })
-    } else {
-      throw new Error("Error reading site admin details from environment")
+    try {
+      if (
+        process.env.SITE_ADMIN_USERNAME &&
+        process.env.SITE_ADMIN_EMAIL &&
+        process.env.SITE_ADMIN_PASSWORD
+      ) {
+        const hashedPassword = await SecurePassword.hash(process.env.SITE_ADMIN_PASSWORD.trim())
+        await db.user.create({
+          data: {
+            name: process.env.SITE_ADMIN_USERNAME,
+            email: process.env.SITE_ADMIN_EMAIL,
+            hashedPassword: hashedPassword,
+          },
+        })
+      } else {
+        throw new Error("Error reading site admin details from environment")
+      }
+    } catch (err) {
+      console.log("Account already exists. Ignoring config file")
     }
   } else {
     fs.readFile("./config.json", "utf8", async (err, jsonString) => {
