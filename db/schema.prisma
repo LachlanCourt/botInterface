@@ -19,10 +19,11 @@ model User {
   name           String?
   email          String   @unique
   hashedPassword String?
-  role           String   @default("USER")
+  role           UserRole @default(USER)
 
   tokens   Token[]
   sessions Session[]
+  accounts Account[]
 }
 
 model Session {
@@ -57,4 +58,19 @@ model Token {
 
 enum TokenType {
   RESET_PASSWORD
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER
+}
+
+model Account {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+
+  users User[]
 }
