@@ -10,7 +10,6 @@ interface ButtonProps {
 
 function Button({ variant = "solid", children, colorScheme, type, ...rest }: ButtonProps) {
   const styles = useMultiStyleConfig("Button", { variant })
-  console.log(styles)
 
   return (
     <ChakraButton variant={variant} __css={styles} colorScheme={colorScheme} {...rest}>
