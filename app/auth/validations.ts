@@ -1,4 +1,5 @@
 import { z } from "zod"
+import db, { UserRole } from "db"
 
 export const email = z
   .string()
@@ -11,9 +12,15 @@ export const password = z
   .max(100)
   .transform((str) => str.trim())
 
+export const role = z.nativeEnum(UserRole)
+
+export const accountId = z.number()
+
 export const Signup = z.object({
   email,
   password,
+  role,
+  accountId,
 })
 
 export const Login = z.object({
