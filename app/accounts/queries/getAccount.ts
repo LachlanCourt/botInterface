@@ -13,11 +13,8 @@ export default resolver.pipe(
   resolver.zod(GetAccount),
   resolver.authorize(),
   async ({ id }, { session }) => {
-    let account
     // Ensure only a user with a correct session ID can access the account, for multitenanting
-    if (session.accountId === id) {
-      account = await db.account.findFirst({ where: { id } })
-    }
+    const account = await db.account.findFirst({ where: { id: session.accountId } })
 
     if (!account) throw new NotFoundError()
 

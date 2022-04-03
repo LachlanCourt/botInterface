@@ -7,29 +7,30 @@ interface GetAccountsInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetAccountsInput) => {
-    const user = useCurrentUser()
-    // Only SUPER users can access all accounts
-    if (user && user.role === UserRole.SUPER) {
-      const {
-        items: accounts,
-        hasMore,
-        nextPage,
-        count,
-      } = await paginate({
-        skip,
-        take,
-        count: () => db.account.count({ where }),
-        query: (paginateArgs) => db.account.findMany({ ...paginateArgs, where, orderBy }),
-      })
-
-      return {
-        accounts,
-        nextPage,
-        hasMore,
-        count,
-      }
+  async ({ where, orderBy, skip = 0, take = 100 }: GetAccountsInput, { session }) => {
+    // Restrict query to session account ID, if it is not already done
+    if (where) {
+      where.id = session.accountId
+    } else {
+      where = { id: session.accountId }
     }
-    return {}
+    const {
+      items: accounts,
+      hasMore,
+      nextPage,
+      count,
+    } = await paginate({
+      skip,
+      take,
+      count: () => db.account.count({ where }),
+      query: (paginateArgs) => db.account.findMany({ ...paginateArgs, where, orderBy }),
+    })
+
+    return {
+      accounts,
+      nextPage,
+      hasMore,
+      count,
+    }
   }
 )
