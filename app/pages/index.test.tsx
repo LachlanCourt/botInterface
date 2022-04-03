@@ -3,6 +3,8 @@ import { render } from "test/utils"
 import Home from "./index"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
+import { UserRole } from "db"
+
 jest.mock("app/core/hooks/useCurrentUser")
 const mockUseCurrentUser = useCurrentUser as jest.MockedFunction<typeof useCurrentUser>
 
@@ -16,7 +18,8 @@ test.skip("renders blitz documentation link", () => {
     id: 1,
     name: "User",
     email: "user@email.com",
-    role: "user",
+    role: UserRole.USER,
+    accountId: 1,
   })
 
   const { getByText } = render(<Home />)

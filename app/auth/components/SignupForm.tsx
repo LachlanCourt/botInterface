@@ -1,15 +1,20 @@
 import { useMutation } from "blitz"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
+import { Input } from "DesignSystem/components"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
+import { UserRole } from "db"
+import { createContext } from "react"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
-type SignupFormProps = {
+interface SignupFormProps {
   onSuccess?: () => void
 }
 
 export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
+  const user = useCurrentUser()
+  const accountId = user?.accountId || 0
 
   return (
     <div>
@@ -18,7 +23,7 @@ export const SignupForm = (props: SignupFormProps) => {
       <Form
         submitText="Create Account"
         schema={Signup}
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "", password: "", role: UserRole.USER, accountId: accountId }}
         onSubmit={async (values) => {
           try {
             await signupMutation(values)
@@ -33,8 +38,8 @@ export const SignupForm = (props: SignupFormProps) => {
           }
         }}
       >
-        <LabeledTextField name="email" label="Email" placeholder="Email" />
-        <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
+        <Input name="email" label="Email" placeholder="Email" />
+        <Input name="password" label="Password" placeholder="Password" type="password" />
       </Form>
     </div>
   )

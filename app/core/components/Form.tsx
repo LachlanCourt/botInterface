@@ -3,6 +3,8 @@ import { Formik, FormikProps } from "formik"
 import { validateZodSchema } from "blitz"
 import { z } from "zod"
 
+import { Button } from "DesignSystem/components"
+
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   /** All your form fields */
@@ -58,8 +60,16 @@ export function Form<S extends z.ZodType<any, any>>({
           )}
 
           {submitText && (
-            <button type="submit" disabled={isSubmitting}>
+            // <Button
+            <button
+              type="submit"
+              // variant="solid"
+              // colorScheme="blue"
+              // onClick={onSubmit}
+              // disabled={isSubmitting}
+            >
               {submitText}
+              {/* </Button> */}
             </button>
           )}
 

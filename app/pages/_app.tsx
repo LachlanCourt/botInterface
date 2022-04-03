@@ -17,7 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const theme = extendTheme(customTheme)
   console.log(theme)
-
   return (
     <ChakraProvider theme={theme}>
       <ErrorBoundary
