@@ -1,5 +1,5 @@
 import { Form, FormProps } from "app/core/components/Form"
-import { Input } from "app/core/components"
+import { Input } from "DesignSystem/components"
 import { z } from "zod"
 export { FORM_ERROR } from "app/core/components/Form"
 

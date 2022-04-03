@@ -9,10 +9,12 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100 }: GetAccountsInput, { session }) => {
     // Restrict query to session account ID, if it is not already done
-    if (where) {
-      where.id = session.accountId
-    } else {
-      where = { id: session.accountId }
+    if (session.role !== UserRole.SUPER) {
+      if (where) {
+        where.id = session.accountId
+      } else {
+        where = { id: session.accountId }
+      }
     }
     const {
       items: accounts,

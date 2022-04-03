@@ -12,11 +12,10 @@ export default resolver.pipe(
   resolver.zod(UpdateAccount),
   resolver.authorize(),
   async ({ id, ...data }, { session }) => {
-    const user = useCurrentUser()
     let account
     if (
-      user &&
-      (user.role === UserRole.SUPER || (user.role === UserRole.ADMIN && session.accountId === id))
+      session.role === UserRole.SUPER ||
+      (session.role === UserRole.ADMIN && session.accountId === id)
     ) {
       account = await db.account.update({ where: { id }, data })
     }

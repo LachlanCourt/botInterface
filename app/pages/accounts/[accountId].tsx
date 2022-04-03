@@ -27,7 +27,7 @@ export const Account = () => {
         <button
           type="button"
           onClick={async () => {
-            if (window.confirm("This will be deleted")) {
+            if (window.confirm(`Are you sure you want to delete the account "${account.name}"?`)) {
               await deleteAccountMutation({ id: account.id })
               router.push(Routes.AccountsPage())
             }

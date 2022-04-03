@@ -1,7 +1,6 @@
 import { resolver, SecurePassword, AuthenticationError } from "blitz"
-import db from "db"
+import db, { UserRole } from "db"
 import { Login } from "../validations"
-import { Role } from "types"
 
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
   const { email, password } = Login.parse({ email: rawEmail, password: rawPassword })
@@ -25,7 +24,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const user = await authenticateUser(email, password)
   // Should only be null if user ROLE = SUPER in which case it will be reassigned when impersonating anyway
   const accountId = user.accountId || 0
-  await ctx.session.$create({ userId: user.id, role: user.role as Role, accountId: accountId })
+  await ctx.session.$create({ userId: user.id, role: user.role as UserRole, accountId: accountId })
 
   return user
 })
