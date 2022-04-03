@@ -10,7 +10,6 @@ export default resolver.pipe(
   resolver.zod(CreateAccount),
   resolver.authorize(),
   async (input, { session }) => {
-    console.log(session.role)
     if (session.role !== UserRole.SUPER) {
       throw new Error("INVALID USER PERMISSIONS FOR THIS OPERATION")
     }
