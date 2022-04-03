@@ -4,7 +4,7 @@ import { Login } from "../validations"
 import { Role } from "types"
 
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
-  const {email, password} = Login.parse({email: rawEmail, password: rawPassword})
+  const { email, password } = Login.parse({ email: rawEmail, password: rawPassword })
   const user = await db.user.findFirst({ where: { email } })
   if (!user) throw new AuthenticationError()
 
@@ -23,8 +23,9 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
 export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
-
-  await ctx.session.$create({ userId: user.id, role: user.role as Role })
+  // Should only be null if user ROLE = SUPER in which case it will be reassigned when impersonating anyway
+  const accountId = user.accountId || 0
+  await ctx.session.$create({ userId: user.id, role: user.role as Role, accountId: accountId })
 
   return user
 })

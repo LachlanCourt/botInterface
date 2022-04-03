@@ -60,9 +60,17 @@ export function Form<S extends z.ZodType<any, any>>({
           )}
 
           {submitText && (
-            <Button type="submit" variant="solid" colorScheme="blue" disabled={isSubmitting}>
+            // <Button
+            <button
+              type="submit"
+              // variant="solid"
+              // colorScheme="blue"
+              // onClick={onSubmit}
+              // disabled={isSubmitting}
+            >
               {submitText}
-            </Button>
+              {/* </Button> */}
+            </button>
           )}
 
           <style global jsx>{`

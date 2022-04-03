@@ -23,7 +23,9 @@ model User {
 
   tokens   Token[]
   sessions Session[]
-  accounts Account[]
+
+  Account   Account? @relation(fields: [accountId], references: [id])
+  accountId Int?
 }
 
 model Session {

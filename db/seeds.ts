@@ -1,4 +1,4 @@
-import db from "./index"
+import db, { UserRole } from "./index"
 import fs from "fs"
 import { SecurePassword } from "blitz"
 
@@ -26,6 +26,7 @@ const seed = async () => {
             name: process.env.SITE_ADMIN_USERNAME,
             email: process.env.SITE_ADMIN_EMAIL,
             hashedPassword: hashedPassword,
+            role: UserRole.SUPER,
           },
         })
       } else {
@@ -43,7 +44,12 @@ const seed = async () => {
       const data = JSON.parse(jsonString)
       const hashedPassword = await SecurePassword.hash(data["password"].trim())
       await db.user.create({
-        data: { name: data["username"], email: data["email"], hashedPassword: hashedPassword },
+        data: {
+          name: data["username"],
+          email: data["email"],
+          hashedPassword: hashedPassword,
+          role: UserRole.SUPER,
+        },
       })
     })
   }

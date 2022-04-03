@@ -1,5 +1,6 @@
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { resolver } from "blitz"
-import db from "db"
+import db, { UserRole } from "db"
 import { z } from "zod"
 
 const DeleteAccount = z.object({
@@ -7,8 +8,10 @@ const DeleteAccount = z.object({
 })
 
 export default resolver.pipe(resolver.zod(DeleteAccount), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const account = await db.account.deleteMany({ where: { id } })
-
+  const user = useCurrentUser()
+  let account
+  if (user && user.role === UserRole.SUPER) {
+    account = await db.account.deleteMany({ where: { id } })
+  }
   return account
 })

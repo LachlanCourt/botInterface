@@ -8,7 +8,8 @@
 CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN', 'SUPER');
 
 -- AlterTable
-ALTER TABLE "User" DROP COLUMN "role",
+ALTER TABLE "User" ADD COLUMN     "accountId" INTEGER,
+DROP COLUMN "role",
 ADD COLUMN     "role" "UserRole" NOT NULL DEFAULT E'USER';
 
 -- CreateTable
@@ -21,20 +22,5 @@ CREATE TABLE "Account" (
     CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "_AccountToUser" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "_AccountToUser_AB_unique" ON "_AccountToUser"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_AccountToUser_B_index" ON "_AccountToUser"("B");
-
 -- AddForeignKey
-ALTER TABLE "_AccountToUser" ADD FOREIGN KEY ("A") REFERENCES "Account"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_AccountToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE SET NULL ON UPDATE CASCADE;

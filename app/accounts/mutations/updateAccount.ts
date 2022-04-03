@@ -1,5 +1,6 @@
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { resolver } from "blitz"
-import db from "db"
+import db, { UserRole } from "db"
 import { z } from "zod"
 
 const UpdateAccount = z.object({
@@ -10,10 +11,15 @@ const UpdateAccount = z.object({
 export default resolver.pipe(
   resolver.zod(UpdateAccount),
   resolver.authorize(),
-  async ({ id, ...data }) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const account = await db.account.update({ where: { id }, data })
-
+  async ({ id, ...data }, { session }) => {
+    const user = useCurrentUser()
+    let account
+    if (
+      user &&
+      (user.role === UserRole.SUPER || (user.role === UserRole.ADMIN && session.accountId === id))
+    ) {
+      account = await db.account.update({ where: { id }, data })
+    }
     return account
   }
 )
