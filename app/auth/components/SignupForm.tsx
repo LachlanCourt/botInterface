@@ -4,7 +4,7 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
 
-type SignupFormProps = {
+interface SignupFormProps {
   onSuccess?: () => void
 }
 
