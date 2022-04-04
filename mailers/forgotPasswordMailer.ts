@@ -5,6 +5,7 @@
  * and use it straight away.
  */
 import previewEmail from "preview-email"
+import mailer from "integrations/mailer"
 
 type ResetPasswordMailer = {
   to: string
@@ -17,7 +18,6 @@ export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
   const resetUrl = `${origin}/reset-password?token=${token}`
 
   const msg = {
-    from: "TODO@example.com",
     to,
     subject: "Your Password Reset Instructions",
     html: `
@@ -33,11 +33,9 @@ export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
   return {
     async send() {
       if (process.env.NODE_ENV === "production") {
-        // TODO - send the production email, like this:
-        // await postmark.sendEmail(msg)
-        throw new Error("No production email implementation in mailers/forgotPasswordMailer")
+        mailer(msg)
       } else {
-        // Preview email in the browser
+        // Preview email in the browser when in development
         await previewEmail(msg)
       }
     },
