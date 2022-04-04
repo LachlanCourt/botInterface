@@ -33,6 +33,7 @@ const seed = async () => {
         throw new Error("Error reading site admin details from environment")
       }
     } catch (err) {
+      console.log(err)
       console.log("Account already exists. Ignoring config file")
     }
   } else {
