@@ -33,8 +33,7 @@ const seed = async () => {
         throw new Error("Error reading site admin details from environment")
       }
     } catch (err) {
-      console.log(err)
-      console.log("Account already exists. Ignoring config file")
+      console.log(`${err}\nAccount not seeded from environment`)
     }
   } else {
     fs.readFile("./config.json", "utf8", async (err, jsonString) => {
