@@ -1,11 +1,9 @@
-/* TODO - You need to add a mailer integration in `integrations/` and import here.
- *
- * The integration file can be very simple. Instantiate the email client
- * and then export it. That way you can import here and anywhere else
- * and use it straight away.
- */
-import previewEmail from "preview-email"
 import mailer from "integrations/mailer"
+
+let previewEmail
+if (process.env.NODE_ENV !== "production") {
+  previewEmail = require("preview-email")
+}
 
 type ResetPasswordMailer = {
   to: string
