@@ -20,6 +20,11 @@ export default resolver.pipe(
 
     if (!account) throw new NotFoundError()
 
+    // If a SUPER user is accessing an account, set the impersonation
+    if (session.role === UserRole.SUPER && id) {
+      await session.$setPublicData({ impersonatedId: id })
+    }
+
     return account
   }
 )

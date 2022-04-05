@@ -1,21 +1,30 @@
-import { useRouter, BlitzPage, Routes } from "blitz"
+import { useRouter, BlitzPage, Routes, useSession } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { SignupForm } from "app/auth/components/SignupForm"
 import { Suspense } from "react"
+import { UserRole } from "db"
+
+const Signup = () => {
+  const router = useRouter()
+  return (
+    <SignupForm
+      onSuccess={() => {
+        console.log("hello")
+        router.push(Routes.Home())
+      }}
+    />
+  )
+}
 
 const SignupPage: BlitzPage = () => {
-  const router = useRouter()
-
   return (
-    <Suspense fallback="loading">
-      <div>
-        <SignupForm onSuccess={() => router.push(Routes.Home())} />
-      </div>
+    <Suspense fallback="Loading">
+      <Signup />
     </Suspense>
   )
 }
 
-SignupPage.redirectAuthenticatedTo = "/"
+//SignupPage.redirectAuthenticatedTo = "/"
 SignupPage.getLayout = (page) => <Layout title="Sign Up">{page}</Layout>
 
 export default SignupPage

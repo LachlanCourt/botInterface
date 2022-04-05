@@ -4,11 +4,17 @@ import Layout from "app/core/layouts/Layout"
 import getAccount from "app/accounts/queries/getAccount"
 import deleteAccount from "app/accounts/mutations/deleteAccount"
 
+import { Button } from "DesignSystem/components"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { UserRole } from "db"
+
 export const Account = () => {
   const router = useRouter()
   const accountId = useParam("accountId", "number")
   const [deleteAccountMutation] = useMutation(deleteAccount)
   const [account] = useQuery(getAccount, { id: accountId })
+  const user = useCurrentUser()
+  const role = user?.role || UserRole.ADMIN
 
   return (
     <>
@@ -19,8 +25,13 @@ export const Account = () => {
       <div>
         <h1>Account {account.id}</h1>
         <pre>{JSON.stringify(account, null, 2)}</pre>
+        {role !== UserRole.USER && (
+          <Button variant="solid" colorScheme="blue">
+            <Link href={Routes.SignupPage()}>Add New User</Link>
+          </Button>
+        )}
 
-        <Link href={Routes.EditAccountPage({ accountId: account.id })}>
+        <Link href={Routes.EditAccountPage({ accountId: account.id, role: role })}>
           <a>Edit</a>
         </Link>
 

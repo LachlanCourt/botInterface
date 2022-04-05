@@ -24,7 +24,12 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const user = await authenticateUser(email, password)
   // Should only be null if user ROLE = SUPER in which case it will be reassigned when impersonating anyway
   const accountId = user.accountId || 0
-  await ctx.session.$create({ userId: user.id, role: user.role as UserRole, accountId: accountId })
+  await ctx.session.$create({
+    userId: user.id,
+    role: user.role as UserRole,
+    accountId: accountId,
+    impersonatedId: accountId,
+  })
 
   return user
 })
