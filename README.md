@@ -1,7 +1,3 @@
-[![Blitz.js](https://raw.githubusercontent.com/blitz-js/art/master/github-cover-photo.png)](https://blitzjs.com)
-
-This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
-
 # **botInterface**
 
 ## Getting Started
@@ -26,6 +22,19 @@ Ensure the `.env.test.local` file has required environment variables:
 
 ```
 DATABASE_URL=postgresql://<YOUR_DB_USERNAME>@localhost:5432/botInterface_test
+```
+
+Ensure your production environment has the required environment variables:
+
+```
+APP_ORIGIN=<URL of website>
+DATABASE_URL=<URL of postgres database>
+SENDGRID_API_KEY=<Used for production email integration>
+SENDGRID_EMAIL_ADDRESS=<Address used to generate API key>
+SESSION_SECRET_KEY=<32 character long random hex code>
+SITE_ADMIN_EMAIL=<Email address of super user to be seeded into database>
+SITE_ADMIN_PASSWORD=<Password address of super user to be seeded into database>
+SITE_ADMIN_USERNAME=<Username address of super user to be seeded into database>
 ```
 
 ## Tests

@@ -8,8 +8,10 @@ interface MailerProps {
   html?: string
 }
 async function main({ from, to, subject, text = ".", html }: MailerProps) {
-  const API_KEY = process.env.SENDGRID_API_KEY || ""
-  sgMail.setApiKey(API_KEY)
+  const API_KEY = process.env.SENDGRID_API_KEY
+  if (!API_KEY) {
+    throw new Error("SENDGRID_API_KEY environment variable missing")
+  }
 
   // If no from email address is specified, attempt to grab from environment
   if (!from) {
@@ -18,6 +20,8 @@ async function main({ from, to, subject, text = ".", html }: MailerProps) {
       throw new Error("SENDGRID_EMAIL_ADDRESS environment variable missing")
     }
   }
+
+  sgMail.setApiKey(API_KEY)
 
   sgMail
     .send({
