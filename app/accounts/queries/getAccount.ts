@@ -2,8 +2,6 @@ import { resolver, NotFoundError } from "blitz"
 import db, { UserRole } from "db"
 import { z } from "zod"
 
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-
 const GetAccount = z.object({
   // This accepts type of undefined, but is required at runtime
   id: z.number().optional().refine(Boolean, "Required"),

@@ -23,6 +23,10 @@ export const Signup = z.object({
   role,
 })
 
+export const name = z.string()
+
+export const CreateAccount = z.object({ name })
+
 export const Login = z.object({
   email,
   password: z.string(),
