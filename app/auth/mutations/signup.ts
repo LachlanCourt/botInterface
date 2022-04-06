@@ -6,7 +6,6 @@ import { Signup } from "app/auth/validations"
 const RESET_PASSWORD_TOKEN_EXPIRATION_IN_HOURS = 4
 
 export default resolver.pipe(resolver.zod(Signup), async ({ email, role = UserRole.USER }, ctx) => {
-  console.log("hello")
   // Password will be initialised as a random token, and then users sent an email to reset it
   const hashedPassword = await SecurePassword.hash(generateToken().trim())
   const user = await db.user.create({

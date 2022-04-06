@@ -2,6 +2,7 @@ import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import createAccount from "app/accounts/mutations/createAccount"
 import { AccountForm, FORM_ERROR } from "app/accounts/components/AccountForm"
+import { CreateAccount } from "app/auth/validations"
 
 const NewAccountPage: BlitzPage = () => {
   const router = useRouter()
@@ -16,8 +17,8 @@ const NewAccountPage: BlitzPage = () => {
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
-        // schema={CreateAccount}
-        // initialValues={{}}
+        schema={CreateAccount}
+        initialValues={{ name: "" }}
         onSubmit={async (values) => {
           try {
             const account = await createAccountMutation(values)

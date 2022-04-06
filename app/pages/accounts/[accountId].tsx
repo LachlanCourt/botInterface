@@ -31,7 +31,7 @@ export const Account = () => {
           </Button>
         )}
 
-        <Link href={Routes.EditAccountPage({ accountId: account.id, role: role })}>
+        <Link href={Routes.EditAccountPage({ accountId: account.id })}>
           <a>Edit</a>
         </Link>
 

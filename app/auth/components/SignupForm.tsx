@@ -1,24 +1,32 @@
-import { useMutation, useSession } from "blitz"
+import { useMutation, useSession, useQuery } from "blitz"
 import { Input, Select } from "DesignSystem/components"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
 import { UserRole } from "db"
+import getAccount from "app/accounts/queries/getAccount"
+import * as React from "react"
+import { SignupServerProps } from "app/auth/pages/signup"
 
 interface SignupFormProps {
   onSuccess?: () => void
+  data: SignupServerProps
 }
 
-export const SignupForm = ({ onSuccess }: SignupFormProps) => {
+export const SignupForm = ({ onSuccess, data }: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
 
   const session = useSession({ suspense: false })
-  //console.log(session)
   const role = session.role || UserRole.ADMIN
+
+  // Session takes time to resolve so rather than getting the accountId off the session, instead take it through props
+  const accountId = data.impersonatedId || data.accountId
+  const [account] = useQuery(getAccount, { id: accountId })
+  const name = account.name
 
   return (
     <div>
-      <h1>Create an Account{session.accountId}</h1>
+      <h1>Add a new user to account {name}</h1>
 
       <Form
         submitText="Create Account"
@@ -28,8 +36,6 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
           role: UserRole.USER,
         }}
         onSubmit={async (values) => {
-          console.log("values:")
-          console.log(values)
           try {
             await signupMutation(values)
             onSuccess?.()
