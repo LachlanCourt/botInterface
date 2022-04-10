@@ -7,6 +7,7 @@ import { UserRole } from "db"
 import getAccount from "app/accounts/queries/getAccount"
 import * as React from "react"
 import { SignupServerProps } from "app/auth/pages/signup"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 interface SignupFormProps {
   onSuccess?: () => void
@@ -16,8 +17,8 @@ interface SignupFormProps {
 export const SignupForm = ({ onSuccess, data }: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
 
-  const session = useSession({ suspense: false })
-  const role = session.role || UserRole.ADMIN
+  const user = useCurrentUser()
+  const role = user?.role || UserRole.ADMIN
 
   // Session takes time to resolve so rather than getting the accountId off the session, instead take it through props
   const accountId = data.impersonatedId || data.accountId

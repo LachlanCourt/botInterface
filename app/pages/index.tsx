@@ -7,10 +7,10 @@ import logo from "public/logo.png"
 import { Button } from "DesignSystem/components/Button"
 
 const PageData = () => {
-  const currentUser = useCurrentUser()
+  const user = useCurrentUser()
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
-  if (!currentUser) {
+  if (!user) {
     router.push(Routes.LoginPage())
     return null
   } else {
@@ -25,9 +25,9 @@ const PageData = () => {
           Logout
         </button>
         <div>
-          User id: <code>{currentUser.id}</code>
+          User id: <code>{user.id}</code>
           <br />
-          User role: <code>{currentUser.role}</code>
+          User role: <code>{user.role}</code>
         </div>
       </>
     )

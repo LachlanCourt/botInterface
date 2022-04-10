@@ -1,7 +1,17 @@
 import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
+import {
+  Head,
+  Link,
+  usePaginatedQuery,
+  useRouter,
+  BlitzPage,
+  Routes,
+  GetServerSideProps,
+  getSession,
+} from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getAccounts from "app/accounts/queries/getAccounts"
+import { UserRole } from "@prisma/client"
 
 const ITEMS_PER_PAGE = 100
 
@@ -39,25 +49,41 @@ export const AccountsList = () => {
   )
 }
 
-const AccountsPage: BlitzPage = () => {
+export const Accounts = ({ data }) => {
+  const router = useRouter()
+  if (!data.role || data.role !== UserRole.SUPER) {
+    router.push("/")
+    return null
+  }
   return (
     <>
       <Head>
         <title>Accounts</title>
       </Head>
 
-      <div>
-        <p>
-          <Link href={Routes.NewAccountPage()}>
-            <a>Create Account</a>
-          </Link>
-        </p>
-
-        <Suspense fallback={<div>Loading...</div>}>
-          <AccountsList />
-        </Suspense>
-      </div>
+      <p>
+        <Link href={Routes.NewAccountPage()}>
+          <a>Create Account</a>
+        </Link>
+      </p>
+      <AccountsList />
     </>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res)
+  return { props: { data: session.$publicData } }
+}
+
+// @ts-ignore
+const AccountsPage: BlitzPage = ({ data }) => {
+  return (
+    <Suspense fallback="Loading">
+      <>
+        <Accounts data={data} />
+      </>
+    </Suspense>
   )
 }
 

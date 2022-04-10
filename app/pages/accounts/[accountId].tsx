@@ -14,39 +14,41 @@ export const Account = () => {
   const [deleteAccountMutation] = useMutation(deleteAccount)
   const [account] = useQuery(getAccount, { id: accountId })
   const user = useCurrentUser()
-  const role = user?.role || UserRole.ADMIN
+  const role = user?.role || UserRole.USER
 
   return (
     <>
       <Head>
-        <title>Account {account.id}</title>
+        <title>Account {account.name}</title>
       </Head>
 
       <div>
-        <h1>Account {account.id}</h1>
+        <h1>Account {account.name}</h1>
         <pre>{JSON.stringify(account, null, 2)}</pre>
         {role !== UserRole.USER && (
-          <Button variant="solid" colorScheme="blue">
-            <Link href={Routes.SignupPage()}>Add New User</Link>
-          </Button>
+          <>
+            <Button variant="solid" colorScheme="blue">
+              <Link href={Routes.SignupPage()}>Add New User</Link>
+            </Button>
+            <Link href={Routes.EditAccountPage({ accountId: account.id })}>
+              <a>Edit</a>
+            </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                if (
+                  window.confirm(`Are you sure you want to delete the account "${account.name}"?`)
+                ) {
+                  await deleteAccountMutation({ id: account.id })
+                  router.push(Routes.AccountsPage())
+                }
+              }}
+              style={{ marginLeft: "0.5rem" }}
+            >
+              Delete
+            </button>
+          </>
         )}
-
-        <Link href={Routes.EditAccountPage({ accountId: account.id })}>
-          <a>Edit</a>
-        </Link>
-
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm(`Are you sure you want to delete the account "${account.name}"?`)) {
-              await deleteAccountMutation({ id: account.id })
-              router.push(Routes.AccountsPage())
-            }
-          }}
-          style={{ marginLeft: "0.5rem" }}
-        >
-          Delete
-        </button>
       </div>
     </>
   )

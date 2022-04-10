@@ -7,10 +7,10 @@ interface SelectProps {
   label: string
 }
 
-function Select({ options }: SelectProps) {
+function Select({ options, name }: SelectProps) {
   const styles = useStyleConfig("Select", {})
   return (
-    <ChakraSelect __css={styles}>
+    <ChakraSelect __css={styles} name={name}>
       {options.map((e, index) => {
         return <option key={index}>{e}</option>
       })}
