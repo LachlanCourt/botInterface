@@ -1,13 +1,26 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
+import {
+  Head,
+  Link,
+  useRouter,
+  useQuery,
+  useMutation,
+  useParam,
+  BlitzPage,
+  Routes,
+  GetServerSideProps,
+  getSession,
+} from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getAccount from "app/accounts/queries/getAccount"
 import updateAccount from "app/accounts/mutations/updateAccount"
 import { AccountForm, FORM_ERROR } from "app/accounts/components/AccountForm"
+import { UserRole } from "@prisma/client"
 
-export const EditAccount = () => {
+export const EditAccount = ({ data }) => {
   const router = useRouter()
   const accountId = useParam("accountId", "number")
+  const [updateAccountMutation] = useMutation(updateAccount)
   const [account, { setQueryData }] = useQuery(
     getAccount,
     { id: accountId },
@@ -16,7 +29,15 @@ export const EditAccount = () => {
       staleTime: Infinity,
     }
   )
-  const [updateAccountMutation] = useMutation(updateAccount)
+
+  if (!data.role || data.role === UserRole.USER) {
+    if (accountId) {
+      router.push(Routes.ShowAccountPage({ accountId }))
+      return null
+    }
+    router.push("/")
+    return null
+  }
 
   return (
     <>
@@ -52,22 +73,27 @@ export const EditAccount = () => {
           }}
         />
       </div>
-    </>
-  )
-}
-
-const EditAccountPage: BlitzPage = () => {
-  return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <EditAccount />
-      </Suspense>
-
       <p>
         <Link href={Routes.AccountsPage()}>
           <a>Accounts</a>
         </Link>
       </p>
+    </>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res)
+  return { props: { data: session.$publicData } }
+}
+
+// @ts-ignore
+const EditAccountPage: BlitzPage = ({ data }) => {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <EditAccount data={data} />
+      </Suspense>
     </div>
   )
 }

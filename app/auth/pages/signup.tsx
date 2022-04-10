@@ -2,11 +2,13 @@ import { useRouter, BlitzPage, Routes, GetServerSideProps, getSession } from "bl
 import Layout from "app/core/layouts/Layout"
 import { SignupForm } from "app/auth/components/SignupForm"
 import { Suspense } from "react"
+import { UserRole } from "db"
 
 export interface SignupServerProps {
   impersonatedId?: number
   accountId?: number
   userId: number | null
+  role: UserRole
 }
 
 interface SignupProps {
@@ -15,7 +17,6 @@ interface SignupProps {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res)
-
   return { props: { data: session.$publicData } }
 }
 
@@ -25,8 +26,8 @@ const Signup = ({ data }: SignupProps) => {
   // The user must be signed in and associated with an account in order to access the signup. If they are not
   // signed in, or are a SUPER user but have navigated straight to the URL rather than via the accounts page
   // Then redirect them to login
-  if (!data.impersonatedId && !data.accountId) {
-    router.push(Routes.LoginPage())
+  if (data.role === UserRole.USER || (!data.impersonatedId && !data.accountId)) {
+    router.push("/")
     return null
   }
   return (

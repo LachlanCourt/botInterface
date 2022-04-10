@@ -1,12 +1,32 @@
-import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
+import {
+  Link,
+  useRouter,
+  useMutation,
+  BlitzPage,
+  Routes,
+  GetServerSideProps,
+  getSession,
+} from "blitz"
 import Layout from "app/core/layouts/Layout"
 import createAccount from "app/accounts/mutations/createAccount"
 import { AccountForm, FORM_ERROR } from "app/accounts/components/AccountForm"
 import { CreateAccount } from "app/auth/validations"
+import { Suspense } from "react"
+import { UserRole } from "@prisma/client"
 
-const NewAccountPage: BlitzPage = () => {
+const New = (data) => {
   const router = useRouter()
   const [createAccountMutation] = useMutation(createAccount)
+
+  if (!data.role || data.role !== UserRole.SUPER) {
+    const accountId = data.accountId
+    if (accountId) {
+      router.push(Routes.ShowAccountPage({ accountId }))
+      return null
+    }
+    router.push("/")
+    return null
+  }
 
   return (
     <div>
@@ -14,9 +34,6 @@ const NewAccountPage: BlitzPage = () => {
 
       <AccountForm
         submitText="Create Account"
-        // TODO use a zod schema for form validation
-        //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-        //         then import and use it here
         schema={CreateAccount}
         initialValues={{ name: "" }}
         onSubmit={async (values) => {
@@ -38,6 +55,20 @@ const NewAccountPage: BlitzPage = () => {
         </Link>
       </p>
     </div>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res)
+  return { props: { data: session.$publicData } }
+}
+
+// @ts-ignore
+const NewAccountPage: BlitzPage = ({ data }) => {
+  return (
+    <Suspense fallback="loading">
+      <New data={data} />
+    </Suspense>
   )
 }
 
