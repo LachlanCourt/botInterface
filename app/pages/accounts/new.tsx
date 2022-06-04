@@ -10,11 +10,11 @@ import {
 import Layout from "app/core/layouts/Layout"
 import createAccount from "app/accounts/mutations/createAccount"
 import { AccountForm, FORM_ERROR } from "app/accounts/components/AccountForm"
-import { CreateAccount } from "app/auth/validations"
+import { CreateAccount as CreateAccountValidation } from "app/auth/validations"
 import { Suspense } from "react"
-import { UserRole } from "@prisma/client"
+import { UserRole } from "db"
 
-const New = (data) => {
+const New = ({ data }) => {
   const router = useRouter()
   const [createAccountMutation] = useMutation(createAccount)
 
@@ -34,7 +34,7 @@ const New = (data) => {
 
       <AccountForm
         submitText="Create Account"
-        schema={CreateAccount}
+        schema={CreateAccountValidation}
         initialValues={{ name: "" }}
         onSubmit={async (values) => {
           try {
