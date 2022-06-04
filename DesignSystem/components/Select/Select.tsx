@@ -5,12 +5,13 @@ interface SelectProps {
   options: Array<string>
   name: string
   label: string
+  onChange?: React.ChangeEventHandler
 }
 
-function Select({ options, name }: SelectProps) {
+const Select = ({ options, name, onChange }: SelectProps) => {
   const styles = useStyleConfig("Select", {})
   return (
-    <ChakraSelect __css={styles} name={name}>
+    <ChakraSelect __css={styles} name={name} onChange={onChange}>
       {options.map((e, index) => {
         return <option key={index}>{e}</option>
       })}
