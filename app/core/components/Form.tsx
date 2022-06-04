@@ -1,5 +1,5 @@
 import { useState, ReactNode, PropsWithoutRef } from "react"
-import { Formik, FormikProps } from "formik"
+import { Formik, FormikProps, Form as FormikForm } from "formik"
 import { validateZodSchema } from "blitz"
 import { z } from "zod"
 
@@ -51,7 +51,7 @@ export function Form<S extends z.ZodType<any, any>>({
       {({ handleSubmit, isSubmitting }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
           {/* Form fields supplied as children are rendered here */}
-          {children}
+          <FormikForm>{children}</FormikForm>
 
           {formError && (
             <div role="alert" style={{ color: "red" }}>
