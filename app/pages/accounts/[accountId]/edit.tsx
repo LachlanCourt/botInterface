@@ -15,7 +15,7 @@ import Layout from "app/core/layouts/Layout"
 import getAccount from "app/accounts/queries/getAccount"
 import updateAccount from "app/accounts/mutations/updateAccount"
 import { AccountForm, FORM_ERROR } from "app/accounts/components/AccountForm"
-import { UserRole } from "@prisma/client"
+import { UserRole } from "db"
 
 export const EditAccount = ({ data }) => {
   const router = useRouter()
