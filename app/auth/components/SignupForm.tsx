@@ -1,6 +1,7 @@
 import { useMutation, useSession, useQuery } from "blitz"
 import { Input, Select } from "DesignSystem/components"
 import { Form, FORM_ERROR } from "app/core/components/Form"
+import { Field } from "formik"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
 import { UserRole } from "db"
@@ -52,11 +53,16 @@ export const SignupForm = ({ onSuccess, data }: SignupFormProps) => {
       >
         <Input name="email" label="Email" placeholder="Email" />
         {role === UserRole.SUPER && (
-          <Select
-            name="role"
-            label="role"
-            options={[UserRole.USER, UserRole.ADMIN, UserRole.SUPER]}
-          />
+          <Field>
+            {({ form: formikForm }) => (
+              <Select
+                name="role"
+                label="role"
+                options={[UserRole.USER, UserRole.ADMIN, UserRole.SUPER]}
+                onChange={formikForm.handleChange}
+              />
+            )}
+          </Field>
         )}
       </Form>
     </div>
